@@ -166,11 +166,7 @@ export function queryFactory<Response, FiltersContent = Record<string, unknown>>
 
         if (type === 'query') {
           // eslint-disable-next-line
-          response = useQuery(
-            key,
-            context => fetch(config?.(filters) || {})?.(context),
-            params as QueryParams<Response>
-          )
+          response = useQuery(key, fetch(config?.(filters) || {}), params as QueryParams<Response>)
         } else {
           //TODO: Стоит сразу описать getNextPageParam для текущего проекта
           // eslint-disable-next-line
