@@ -4,6 +4,7 @@ import {
   InfiniteData,
   QueryClient,
   QueryFunction,
+  QueryFunctionContext,
   useInfiniteQuery,
   UseInfiniteQueryOptions,
   UseInfiniteQueryResult,
@@ -40,7 +41,15 @@ export const getSingleRequestTarget = (id: number | string, target: string): str
 export const queryFetchFactory =
   <Response, RequestData = undefined>(url: string, defaultConfig: AxiosRequestConfig = {}) =>
   (config?: AxiosRequestConfig) =>
-  async () => {
+  async (context?: QueryFunctionContext) => {
+    if (context?.pageParam) {
+      const { pageParam: page } = context
+      if (!defaultConfig.params) {
+        defaultConfig.params = { page }
+      } else {
+        defaultConfig.params.page = page
+      }
+    }
     const { data } = await httpClient<Response, RequestData>(merge({ url }, defaultConfig, config))
     return data
   }
@@ -137,7 +146,7 @@ export function queryFactory<Response, FiltersContent = Record<string, unknown>>
         } else {
           await queryClient.prefetchInfiniteQuery(
             key,
-            fetch(config?.(filters) || {}),
+            context => fetch(config?.(filters) || {})?.(context),
             params as InfiniteQueryParams<Response>
           )
         }
@@ -157,11 +166,19 @@ export function queryFactory<Response, FiltersContent = Record<string, unknown>>
 
         if (type === 'query') {
           // eslint-disable-next-line
-          response = useQuery(key, fetch(config?.(filters) || {}), params as QueryParams<Response>)
+          response = useQuery(
+            key,
+            context => fetch(config?.(filters) || {})?.(context),
+            params as QueryParams<Response>
+          )
         } else {
           //TODO: Стоит сразу описать getNextPageParam для текущего проекта
           // eslint-disable-next-line
-          response = useInfiniteQuery(key, fetch(config?.(filters) || {}), params as InfiniteQueryParams<Response>)
+          response = useInfiniteQuery(
+            key,
+            context => fetch(config?.(filters) || {})?.(context),
+            params as InfiniteQueryParams<Response>
+          )
         }
 
         return {
