@@ -1,8 +1,11 @@
 import { FC, Fragment } from 'react'
-import Arrow from '@/shared/assets/icons/common/small-arrow.svg'
-import cn from 'classnames'
 import { Menu, Transition } from '@headlessui/react'
+import { FCWithClassName } from '@/shared/@types'
+import { Button } from '../button'
+import { useTranslate } from '@/shared/lib'
 import Skeleton from 'react-loading-skeleton'
+import cn from 'classnames'
+import ArrowIcon from '@/shared/assets/icons/common/pagination-select-arrow.svg'
 
 export interface AdminPaginationProps {
   page: number
@@ -15,14 +18,13 @@ export interface AdminPaginationProps {
   selectedText?: string
   selectedCount?: number
   disabled?: boolean
-  className?: string
   statsClassName?: string
   paginationClassName?: string
   onPageChange: (page: number) => void
   onPageSizeChange?: (page: number) => void
 }
 
-export const AdminPagination: FC<AdminPaginationProps> = ({
+export const AdminPagination: FCWithClassName<AdminPaginationProps> = ({
   page,
   totalPageCount = 0,
   withPageSize,
@@ -39,25 +41,28 @@ export const AdminPagination: FC<AdminPaginationProps> = ({
   onPageChange,
   onPageSizeChange,
 }) => {
+  const { t } = useTranslate(['common'])
+
   const isPrevPageDisabled = disabled || page === 1
   const isNextPageDisabled = disabled || page === totalPageCount
 
-  const arrowButtonStyle = `group flex items-center justify-center bg-background-hover border border-transparent h-5 w-6 rounded-md active:border-primary
-  disabled:border-lines disabled:bg-background-primary disabled:cursor-not-allowed`
+  const arrowButtonStyle = 'group w-6 !rounded-small'
 
   return (
     <div
-      className={cn('flex items-center justify-between w-full', {
+      className={cn('flex items-center justify-start gap-3 w-full', {
         [className]: className,
       })}
     >
       <div className='flex gap-large'>
         <h6
-          className={cn('text-gray', {
+          data-testId='items-on-page'
+          className={cn('text-text-secondary', {
             [statsClassName]: statsClassName,
           })}
         >
-          {page * pageSize + 1 - pageSize}-{page === totalPageCount ? totalItems : pageSize * page} of {totalItems}
+          {page * pageSize + 1 - pageSize}-{page === totalPageCount ? totalItems : pageSize * page} {t('of')}{' '}
+          {totalItems}
         </h6>
         {!!selectedCount && (
           <h6 className='text-gray'>
@@ -72,16 +77,16 @@ export const AdminPagination: FC<AdminPaginationProps> = ({
       >
         {withPageSize && (
           <div className='flex items-center gap-1'>
-            <h6 className='text-gray'>{pageSizeTitle}</h6>
+            <h6 className='text-text-secondary'>{pageSizeTitle}</h6>
             <Menu as='div' defaultValue={pageSize} className='relative inline-block text-left'>
               {({ open }) => (
                 <>
-                  <Menu.Button data-testid='page-size-select' className='inline-flex items-center gap-[2px]'>
-                    <h6 className='text-white'>{pageSize}</h6>
+                  <Menu.Button data-testid='page-size-select' className='inline-flex items-center gap-0.5'>
+                    <h6 className='text-black'>{pageSize}</h6>
                     <div className='flex items-center justify-center w-4 h-4'>
-                      <Arrow
-                        className={cn('-rotate-90 stroke-white transition-transform', {
-                          'rotate-90': open,
+                      <ArrowIcon
+                        className={cn('stroke-black transition-transform', {
+                          'rotate-180': open,
                         })}
                       />
                     </div>
@@ -95,14 +100,14 @@ export const AdminPagination: FC<AdminPaginationProps> = ({
                     leaveFrom='transform opacity-100 scale-100'
                     leaveTo='transform opacity-0 scale-95'
                   >
-                    <Menu.Items className='absolute mb-[6px] -translate-x-3 -translate-y-72 border border-gray p-1 rounded-md bg-background-hover outline-none origin-top'>
+                    <Menu.Items className='absolute p-1 origin-top -translate-x-3 bg-white border mb-extra-small drop-shadow-pagination border-border rounded-base'>
                       {pageSizeOptions?.map(size => (
                         <Menu.Item key={size}>
                           <button
                             className={cn(
-                              'flex items-center justify-center w-10 h-8 rounded-md text-white hover:text-primary',
+                              'flex items-center justify-center w-10 h-8 rounded-base text-black hover:bg-gray-tertiary',
                               {
-                                'bg-background-primary !text-primary': pageSize === size,
+                                'bg-background-primary !text-gray': pageSize === size,
                               }
                             )}
                             onClick={() => {
@@ -122,33 +127,31 @@ export const AdminPagination: FC<AdminPaginationProps> = ({
           </div>
         )}
         <div className='flex items-center gap-base'>
-          <button
+          <Button
+            color='secondary'
+            variant='border-icon'
             data-testid='left-button'
             className={arrowButtonStyle}
             disabled={isPrevPageDisabled}
             onClick={() => onPageChange(page - 1)}
+            size='small'
           >
-            <Arrow
-              className={cn('stroke-white group-hover:stroke-primary', {
-                '!stroke-lines': isPrevPageDisabled,
-              })}
-            />
-          </button>
-          <h6 className='text-gray'>
-            {page}/<span className='text-white'>{totalPageCount}</span>
+            <ArrowIcon className='rotate-90 stroke-currentColor ' />
+          </Button>
+          <h6 className='text-black'>
+            {page}/<span className='text-text-secondary'>{totalPageCount}</span>
           </h6>
-          <button
+          <Button
+            color='secondary'
+            variant='border-icon'
             data-testid='right-button'
             className={arrowButtonStyle}
             disabled={isNextPageDisabled}
             onClick={() => onPageChange(page + 1)}
+            size='small'
           >
-            <Arrow
-              className={cn('rotate-180 stroke-white group-hover:stroke-primary', {
-                '!stroke-stlinesroke': isNextPageDisabled,
-              })}
-            />
-          </button>
+            <ArrowIcon className='-rotate-90 stroke-currentColor' />
+          </Button>
         </div>
       </div>
     </div>

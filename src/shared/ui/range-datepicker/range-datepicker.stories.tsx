@@ -1,8 +1,8 @@
 import { Story, Meta } from '@storybook/react'
-import { RangeDatepicker, DatepickerProps } from './range-datepicker'
+import { RangeDatepicker, RangeDatepickerProps } from './range-datepicker'
 
 export default {
-  title: 'Shared/RangeDatepicker',
+  title: 'Shared/Range Datepicker',
   component: RangeDatepicker,
   args: {
     name: 'storybook-range-datepicker',
@@ -11,7 +11,7 @@ export default {
   },
 } as Meta
 
-const Template: Story<DatepickerProps> = args => <RangeDatepicker {...args} />
+const Template: Story<RangeDatepickerProps> = args => <RangeDatepicker {...args} />
 
 export const Default = Template.bind({})
 Default.args = {}
