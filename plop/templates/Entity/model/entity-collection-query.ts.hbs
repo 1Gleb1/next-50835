@@ -1,0 +1,24 @@
+import { queryFactory, QueryParams } from '@/shared/lib'
+import { useRouter } from 'next/router'
+import { CollectionResponse } from '@/shared/@types'
+import { {{pascalCase name}}, {{constantCase pluralName}}_COLLECTION_PRIMARY_KEY } from '../lib'
+import { queryFetch{{pascalCase name}} } from './requests'
+
+const {{camelCase pluralName}}CollectionQuery = queryFactory(
+  {{constantCase pluralName}}_COLLECTION_PRIMARY_KEY,
+  queryFetch{{pascalCase name}}
+)(filters => ({
+  params: filters
+}))
+
+export const use{{pascalCase pluralName}}Collection = (params?: QueryParams<CollectionResponse<{{pascalCase name}}>>) => {
+  const { locale } = useRouter()
+
+  return {{camelCase pluralName}}CollectionQuery.useHookInitializer({
+    ...params,
+    filters: {
+      locale,
+      ...params?.filters,
+    },
+  })
+}

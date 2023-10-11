@@ -1,0 +1,19 @@
+import { queryFactory, QueryParams } from '@/shared/lib'
+import { useRouter } from 'next/router'
+import { queryFetch{{pascalCase name}}ById } from './requests'
+import { {{constantCase name}}_SINGLE_PRIMARY_KEY, {{pascalCase name}} } from '../lib'
+
+const {{camelCase name}}Query = ({{camelCase name}}Id: string) =>
+  queryFactory([...{{constantCase name}}_SINGLE_PRIMARY_KEY, {{camelCase name}}Id], queryFetch{{pascalCase name}}ById({{camelCase name}}Id))()
+
+export const useGet{{pascalCase name}} = ({{camelCase name}}Id: string, params?: QueryParams<{{pascalCase name}}>) => {
+  const { locale } = useRouter()
+
+  return {{camelCase name}}Query({{camelCase name}}Id).useHookInitializer({
+    ...params,
+    filters: {
+      locale,
+      ...params?.filters,
+    },
+  })
+}

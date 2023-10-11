@@ -1,0 +1,23 @@
+import { queryFetchFactory } from '@/shared/lib'
+import { {{constantCase name}}_CREATE_REQUEST_TARGET, {{constantCase name}}_SINGLE_BY_SLUG_REQUEST_TARGET, {{constantCase pluralName}}_REQUEST_TARGET, {{constantCase name}}_SINGLE_REQUEST_TARGET } from '../lib/constants'
+import { getSingleRequestTarget } from '@/shared/lib'
+import { CollectionResponse } from '@/shared/@types'
+import { {{pascalCase name}} } from '../lib/types'
+
+export const queryCreate{{pascalCase name}} = queryFetchFactory<{{pascalCase name}}>({{constantCase name}}_CREATE_REQUEST_TARGET)
+
+export const queryDelete{{pascalCase name}} = ({{camelCase name}}Id: string) =>
+  queryFetchFactory<{{pascalCase name}}>(getSingleRequestTarget({{camelCase name}}Id, {{constantCase name}}_SINGLE_REQUEST_TARGET), {
+    method: 'DELETE',
+  })
+
+export const queryMutate{{pascalCase name}} = ({{camelCase name}}Id: string) =>
+  queryFetchFactory<{{pascalCase name}}>(getSingleRequestTarget({{camelCase name}}Id, {{constantCase name}}_SINGLE_REQUEST_TARGET))
+
+export const queryFetch{{pascalCase name}}ById = ({{camelCase name}}Id: string) =>
+  queryFetchFactory<{{pascalCase name}}>(getSingleRequestTarget({{camelCase name}}Id, {{constantCase name}}_SINGLE_REQUEST_TARGET))
+
+export const queryFetch{{pascalCase name}}BySlug = ({{camelCase name}}Slug: string) =>
+  queryFetchFactory<{{pascalCase name}}>(getSingleRequestTarget({{camelCase name}}Slug, {{constantCase name}}_SINGLE_BY_SLUG_REQUEST_TARGET))
+
+export const queryFetch{{pascalCase name}} = queryFetchFactory<CollectionResponse<{{pascalCase name}}>>({{constantCase pluralName}}_REQUEST_TARGET)

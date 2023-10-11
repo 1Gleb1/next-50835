@@ -1,0 +1,24 @@
+import { AxiosError, AxiosRequestConfig } from 'axios'
+import { UseMutationOptions, useMutation } from 'react-query'
+import { notify, useTranslate } from '@/shared/lib'
+import { Create{{pascalCase name}}Request, {{pascalCase name}} } from '../lib'
+import { queryCreate{{pascalCase name}} } from './requests'
+import { {{constantCase name}}_CREATE_PRIMARY_KEY } from '../lib'
+
+export const useCreate{{pascalCase name}} = (
+  options?: Omit<UseMutationOptions<{{pascalCase name}}, AxiosError, Create{{pascalCase name}}Request>, 'mutationFn'>,
+  config?: AxiosRequestConfig
+) => {
+  const { t } = useTranslate(['common'])
+
+  return useMutation(data => queryCreate{{pascalCase name}}({ ...config, data, method: 'POST' })(), {
+    ...options,
+    mutationKey: {{constantCase name}}_CREATE_PRIMARY_KEY,
+    onSuccess: () => {
+      notify(t('Success'))
+    },
+    onError: () => {
+      notify(t('Server error'), { status: 'error' })
+    },
+  })
+}

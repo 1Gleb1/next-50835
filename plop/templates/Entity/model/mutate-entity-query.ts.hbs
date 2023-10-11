@@ -1,0 +1,28 @@
+import { UseMutationOptions, useMutation } from 'react-query'
+import { AxiosError, AxiosRequestConfig } from 'axios'
+import { notify, useTranslate } from '@/shared/lib'
+import { Mutate{{pascalCase name}}Request, {{constantCase name}}_DELETE_PRIMARY_KEY, {{constantCase name}}_MUTATE_PRIMARY_KEY, {{pascalCase name}} } from '../lib'
+import { queryMutate{{pascalCase name}} } from './requests'
+
+export const useMutate{{pascalCase name}} = (
+  type: 'UPDATE' | 'DELETE',
+  options?: Omit<UseMutationOptions<{{pascalCase name}}, AxiosError, Mutate{{pascalCase name}}Request>, 'mutationFn'>,
+  config?: AxiosRequestConfig
+) => {
+  const { t } = useTranslate(['common'])
+  const isUpdate = type === 'UPDATE'
+
+  return useMutation(
+    ({ id, ...data }) => queryMutate{{pascalCase name}}(id)({ ...config, data, method: isUpdate ? 'PUT' : 'DELETE' })(),
+    {
+      ...options,
+      mutationKey: isUpdate ? {{constantCase name}}_MUTATE_PRIMARY_KEY : {{constantCase name}}_DELETE_PRIMARY_KEY,
+      onSuccess: () => {
+        notify(t('Success'))
+      },
+      onError: () => {
+        notify(t('Server error'))
+      },
+    }
+  )
+}

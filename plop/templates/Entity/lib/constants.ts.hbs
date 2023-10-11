@@ -1,0 +1,19 @@
+export const {{constantCase pluralName}}_REQUEST_TARGET = '/{{pluralName}}'
+
+export const {{constantCase name}}_CREATE_REQUEST_TARGET = '/{{name}}'
+
+export const {{constantCase name}}_SINGLE_REQUEST_TARGET = {{constantCase name}}_CREATE_REQUEST_TARGET + '/:id'
+
+export const {{constantCase name}}_SINGLE_BY_SLUG_REQUEST_TARGET = {{constantCase name}}_CREATE_REQUEST_TARGET + '/slug/:slug'
+
+export const {{constantCase name}}_CREATE_PRIMARY_KEY = [{{constantCase name}}_CREATE_REQUEST_TARGET, '{{name}}-create']
+
+export const {{constantCase name}}_DELETE_PRIMARY_KEY = [{{constantCase name}}_SINGLE_REQUEST_TARGET, '{{name}}-delete']
+
+export const {{constantCase name}}_MUTATE_PRIMARY_KEY = [{{constantCase name}}_SINGLE_REQUEST_TARGET, '{{name}}-update']
+
+export const {{constantCase name}}_SINGLE_PRIMARY_KEY = [{{constantCase name}}_SINGLE_REQUEST_TARGET, '{{name}}-single']
+
+export const {{constantCase name}}_SINGLE_BY_SLUG_PRIMARY_KEY = [{{constantCase name}}_SINGLE_BY_SLUG_REQUEST_TARGET, '{{name}}-single']
+
+export const {{constantCase pluralName}}_COLLECTION_PRIMARY_KEY = [{{constantCase pluralName}}_REQUEST_TARGET, '{{pluralName}}-collection']
