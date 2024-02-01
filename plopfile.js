@@ -36,6 +36,7 @@ module.exports = plop => {
         templateFile: 'plop/templates/Component/index.ts.hbs',
       },
     ],
+<<<<<<< HEAD
   })
   plop.setGenerator('entity', {
     description: 'Create an entity',
@@ -121,4 +122,29 @@ module.exports = plop => {
       'Вам необходимо добавить импорт и handler в src/app/mocks-server/handlers.ts',
     ],
   })
+=======
+  }),
+    plop.setGenerator('rxdb-collection', {
+      description: 'Create a RxDB Collection',
+      prompts: [
+        {
+          type: 'input',
+          name: 'path',
+          message: 'Path',
+        },
+        {
+          type: 'input',
+          name: 'name',
+          message: 'What is your collection name?',
+        },
+      ],
+      actions: [
+        {
+          type: 'add',
+          path: '{{path}}/{{name}}-collection.ts',
+          templateFile: 'plop/templates/RxDBCollection.ts.hbs',
+        },
+      ],
+    })
+>>>>>>> 9e0a1636a54349ea60089efad2019b314a88e82a
 }
