@@ -1,6 +1,7 @@
 {
-    "all": "All",
-    "signIn": "Sign in",
-    "signOut": "Sign Out",
-    "noPhoto": "No Photo"
+  "all": "All",
+  "signIn": "Sign in",
+  "signOut": "Sign Out",
+  "noPhoto": "No Photo",
+  "The compatible and current versions of the backend are the same": "The compatible and current versions of the backend are the same"
 }
