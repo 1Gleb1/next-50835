@@ -36,6 +36,93 @@ module.exports = plop => {
         templateFile: 'plop/templates/Component/index.ts.hbs',
       },
     ],
+<<<<<<< HEAD
+  })
+  plop.setGenerator('entity', {
+    description: 'Create an entity',
+    prompts: [
+      {
+        type: 'input',
+        name: 'name',
+        message: 'What is your entity name?',
+      },
+      {
+        type: 'input',
+        name: 'pluralName',
+        message: 'What is your entity plural name? (Во множественном числе)',
+      },
+    ],
+    actions: [
+      {
+        type: 'add',
+        path: 'src/entities/{{name}}/lib/constants.ts',
+        templateFile: 'plop/templates/Entity/lib/constants.ts.hbs',
+      },
+      {
+        type: 'add',
+        path: 'src/entities/{{name}}/lib/index.ts',
+        templateFile: 'plop/templates/Entity/lib/index.ts.hbs',
+      },
+      {
+        type: 'add',
+        path: 'src/entities/{{name}}/lib/types.ts',
+        templateFile: 'plop/templates/Entity/lib/types.ts.hbs',
+      },
+      {
+        type: 'add',
+        path: 'src/entities/{{name}}/model/create-{{name}}-query.ts',
+        templateFile: 'plop/templates/Entity/model/create-entity-query.ts.hbs',
+      },
+      {
+        type: 'add',
+        path: 'src/entities/{{name}}/model/mutate-{{name}}-query.ts',
+        templateFile: 'plop/templates/Entity/model/mutate-entity-query.ts.hbs',
+      },
+      {
+        type: 'add',
+        path: 'src/entities/{{name}}/model/get-{{name}}-by-id-query.ts',
+        templateFile: 'plop/templates/Entity/model/get-entity-by-id-query.ts.hbs',
+      },
+      {
+        type: 'add',
+        path: 'src/entities/{{name}}/model/get-{{name}}-by-slug-query.ts',
+        templateFile: 'plop/templates/Entity/model/get-entity-by-slug-query.ts.hbs',
+      },
+      {
+        type: 'add',
+        path: 'src/entities/{{name}}/model/{{name}}-collection-query.ts',
+        templateFile: 'plop/templates/Entity/model/entity-collection-query.ts.hbs',
+      },
+      {
+        type: 'add',
+        path: 'src/entities/{{name}}/model/index.ts',
+        templateFile: 'plop/templates/Entity/model/index.ts.hbs',
+      },
+      {
+        type: 'add',
+        path: 'src/entities/{{name}}/model/requests.ts',
+        templateFile: 'plop/templates/Entity/model/requests.ts.hbs',
+      },
+      {
+        type: 'add',
+        path: 'src/entities/{{name}}/index.ts',
+        templateFile: 'plop/templates/Entity/index.ts.hbs',
+      },
+      {
+        type: 'add',
+        path: 'src/app/mocks-server/routes/{{name}}.ts',
+        templateFile: 'plop/templates/Entity/route.ts.hbs',
+      },
+      {
+        type: 'append',
+        path: 'src/app/mocks-server/routes/index.ts',
+        pattern: '',
+        template: 'export * from "./{{name}}"',
+      },
+      'Вам необходимо добавить импорт и handler в src/app/mocks-server/handlers.ts',
+    ],
+  })
+=======
   }),
     plop.setGenerator('rxdb-collection', {
       description: 'Create a RxDB Collection',
@@ -59,4 +146,5 @@ module.exports = plop => {
         },
       ],
     })
+>>>>>>> 9e0a1636a54349ea60089efad2019b314a88e82a
 }

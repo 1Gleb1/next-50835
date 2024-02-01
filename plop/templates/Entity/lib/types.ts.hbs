@@ -1,0 +1,13 @@
+import { BaseEntity } from '@/shared/@types'
+
+export interface {{pascalCase name}} extends Partial<BaseEntity> {}
+
+export interface Create{{pascalCase name}}Request {}
+
+export interface Mutate{{pascalCase name}}Request {
+  id: string
+}
+
+export interface Delete{{pascalCase name}}Request {
+  id: string
+}
