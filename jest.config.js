@@ -11,8 +11,17 @@ const customJestConfig = {
   coveragePathIgnorePatterns: [
     '<rootDir>/.*/index.ts$',
     'node_modules',
+    'lintstagedrc.ts',
     '<rootDir>/src/shared/config',
+    '<rootDir>/src/app/mocks-server',
+    '<rootDir>/src/app/providers',
+    '<rootDir>/src/pages',
     '<rootDir>/src/shared/@types',
+    '<rootDir>/src/shared/lib/react-query',
+    '<rootDir>/src/shared/lib/jotai',
+    '<rootDir>/src/app',
+    '<rootDir>/.*/constants.ts$',
+    '<rootDir>/.*/model',
   ],
   moduleNameMapper: {
     '^@/jest/(.*)': '<rootDir>/jest/$1',

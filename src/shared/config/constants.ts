@@ -31,6 +31,9 @@ export const ACCESS_TOKEN_COOKIES_NAME = 'access_token'
 export const REFRESH_TOKEN_COOKIES_NAME = 'refresh_token'
 export const REFRESH_TOKEN_MAX_AGE = 360000
 
+export const MOBILE_BREAK_POINT = 768
+export const TABLET_BREAK_POINT = 1400
+
 export const MINIMUM_BACKEND_NUMBER = -2147483647
 export const MAXIMUM_BACKEND_NUMBER = 2147483647
 

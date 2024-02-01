@@ -15,6 +15,7 @@ import {
 import { httpClient } from '@/shared/lib'
 import { getBetweenFilterValue } from '@/shared/helpers'
 import { ParsedUrlQuery } from 'querystring'
+import { GetServerSidePropsContext, PreviewData } from 'next'
 import { CollectionResponse } from '@/shared/@types'
 
 export type CustomQueryKey = unknown[]
@@ -50,21 +51,20 @@ export type InfiniteQueryParams<Response, FiltersContent = {}> = Omit<
   UseInfiniteQueryOptions<Response, AxiosError, Response, Response, CustomQueryKey>,
   'queryKey' | 'queryFn'
 > & { key?: string[]; filters?: QueryFilters<FiltersContent> }
-
 export const getSingleRequestTarget = (id: number | string, target: string): string =>
   // eslint-disable-next-line
   target.replace(/\:id/, String(id))
 
 export const queryFetchFactory =
   <Response, RequestData = undefined>(url: string, defaultConfig: AxiosRequestConfig = {}) =>
-  (config?: AxiosRequestConfig) =>
+  (config?: AxiosRequestConfig, ctx?: GetServerSidePropsContext<ParsedUrlQuery, PreviewData>) =>
   async (context?: QueryFunctionContext) => {
     if (context?.pageParam && config) {
       const { pageParam: page } = context
       if (config.params) config.params.page = page
       else config.params = { page }
     }
-    const { data } = await httpClient<Response, RequestData>(merge({ url }, defaultConfig, config))
+    const { data } = await httpClient<Response, RequestData>(merge({ url, ctx }, defaultConfig, config))
     return data
   }
 
@@ -161,7 +161,7 @@ export function queryFactory<Response, FiltersContent = Record<string, unknown>>
         } else {
           await queryClient.prefetchInfiniteQuery(
             key,
-            fetch(config?.(filters) || {}),
+            context => fetch(config?.(filters) || {})?.(context),
             params as InfiniteQueryParams<Response, FiltersContent>
           )
         }
@@ -190,7 +190,7 @@ export function queryFactory<Response, FiltersContent = Record<string, unknown>>
           // eslint-disable-next-line
           response = useInfiniteQuery(
             key,
-            fetch(config?.(filters) || {}),
+            context => fetch(config?.(filters) || {})?.(context),
             params as InfiniteQueryParams<Response, FiltersContent>
           )
         }
