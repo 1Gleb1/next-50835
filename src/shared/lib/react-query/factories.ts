@@ -16,10 +16,25 @@ import { httpClient } from '@/shared/lib'
 import { getBetweenFilterValue } from '@/shared/helpers'
 import { ParsedUrlQuery } from 'querystring'
 import { GetServerSidePropsContext, PreviewData } from 'next'
+import { CollectionResponse } from '@/shared/@types'
 
 export type CustomQueryKey = unknown[]
+export type getNextPageParam = (lastPage: CollectionResponse<Response>, allPages: Response[]) => number | boolean
 
 export type QueryType = 'query' | 'infinite'
+
+export type QueryWithCollectionResponse<R extends CollectionResponse, P extends QueryParams<R>> = (
+  params?: P
+) => UseQueryResult<R> & {
+  currentQueryKey: CustomQueryKey
+}
+
+export type DependentQueryWithCollectionResponse<R extends CollectionResponse, P extends QueryParams<R>> = (
+  id: string,
+  params?: P
+) => UseQueryResult<R> & {
+  currentQueryKey: CustomQueryKey
+}
 
 export type QueryFetchFunction<Response> = (
   config?: AxiosRequestConfig | undefined
@@ -160,6 +175,7 @@ export function queryFactory<Response, FiltersContent = Record<string, unknown>>
 
         // TODO: Нужно протестить, что ключ такого формата не ломает логику react-query
         // Нужно делать копию, т.к. без нее будет мутация оригинального primaryKey из-за push ниже и react-query будет спамить запросы без остановки
+
         const key =
           serverSideFilters ||
           ([...primaryKey, ...(params?.key || []), Object.entries(filters).join()] as CustomQueryKey)
