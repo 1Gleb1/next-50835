@@ -1,6 +1,6 @@
 {
   "name": "next.js_baseapp",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "backendVersion":"backendVersion",
   "private": true,
   "scripts": {
