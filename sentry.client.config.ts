@@ -3,12 +3,12 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs'
-import getConfig from 'next/config'
-import JSzip from 'jszip'
+import { PROJECT_VERSION, PROJECT_LAST_BUILD_DATE, SENTRY_URL, NODE_ENV, isDevEnv, isProdEnv, SENTRY_ENEABLED_FORCE, BACKEND_VERSION } from './src/shared/config/env.ts'
 
 Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  environment: 'production',
+  dsn: SENTRY_URL,
+  environment: NODE_ENV,
+  enabled: isDevEnv || isProdEnv || SENTRY_ENEABLED_FORCE,
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,
 
@@ -27,8 +27,9 @@ Sentry.init({
 
   initialScope: {
     tags: {
-      version: getConfig().publicRuntimeConfig.NEXT_PUBLIC_PROJECT_VERSION,
-      last_build_time: new Date(getConfig().publicRuntimeConfig.NEXT_PUBLIC_PROJECT_LAST_BUILD_DATE).toLocaleString(),
+      version: PROJECT_VERSION,
+      last_build_time: new Date(PROJECT_LAST_BUILD_DATE).toLocaleString(),
+      backendVersion: BACKEND_VERSION
     },
   },
 
@@ -41,45 +42,8 @@ Sentry.init({
     }),
   ],
 
-  async beforeSend(event, hint) {
-    const order = event.contexts?.put_body || event.contexts?.order
-    if (order) {
-      order?.database?.wells?.forEach(well => {
-        well.shafts?.forEach(shaft => {
-          shaft?.documents?.forEach(document => {
-            document.base64 && (document.base64 = true)
-          })
-          shaft?.mediaFiles?.forEach(mediaFile => {
-            mediaFile.base64 && (mediaFile.base64 = true)
-          })
-        })
-      })
-    }
-
-    /***
-     * Все данные в объекте context относящиеся к заявке будут заархивированы и отправленны в sentry, как attachments
-     ***/
-    const attachment = {}
-
-    for (const contextKey in event.contexts) {
-      if (/order/i.test(contextKey)) {
-        attachment[contextKey] = event.contexts[contextKey]
-        delete event.contexts[contextKey]
-      }
-    }
-
-    if (Object.keys(attachment).length) {
-      const zip = new JSzip()
-      zip.file('orders.zip', JSON.stringify(attachment))
-      await zip.generateAsync({ type: 'uint8array' }).then(content => {
-        hint.attachments = [...(hint.attachments || []), { filename: 'orders.zip', data: content }]
-      })
-    }
-
-    if (event.user) {
-      delete event.user?.roles
-    }
-
+  async beforeSend(event) {
+    //Обработка логирование до отправки
     return event
   },
 })

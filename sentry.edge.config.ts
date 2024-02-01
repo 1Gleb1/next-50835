@@ -4,11 +4,12 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs'
-import getConfig from 'next/config'
+import { PROJECT_VERSION, PROJECT_LAST_BUILD_DATE, SENTRY_URL, NODE_ENV, isDevEnv, isProdEnv, SENTRY_ENEABLED_FORCE, BACKEND_VERSION } from './src/shared/config/env.ts'
 
 Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  environment: 'production',
+  dsn: SENTRY_URL,
+  environment: NODE_ENV,
+  enabled: isDevEnv || isProdEnv || SENTRY_ENEABLED_FORCE,
 
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,
@@ -17,8 +18,9 @@ Sentry.init({
 
   initialScope: {
     tags: {
-      version: getConfig().publicRuntimeConfig.NEXT_PUBLIC_PROJECT_VERSION,
-      last_build_time: new Date(getConfig().publicRuntimeConfig.NEXT_PUBLIC_PROJECT_LAST_BUILD_DATE).toLocaleString(),
+      version: PROJECT_VERSION,
+      last_build_time: new Date(PROJECT_LAST_BUILD_DATE).toLocaleString(),
+      backendVersion: BACKEND_VERSION
     },
   },
 

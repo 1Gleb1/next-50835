@@ -1,6 +1,7 @@
 {
   "name": "next.js_baseapp",
   "version": "0.1.0",
+  "backendVersion":"backendVersion",
   "private": true,
   "scripts": {
     "dev": "docker-compose -f docker-compose.dev.yaml up",
