@@ -3,4 +3,5 @@
 
 yarn lint-staged
 yarn test
+yarn version --no-git-tag-version --patch
 git add .
