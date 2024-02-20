@@ -4,8 +4,8 @@ import * as stories from './truncate-container.stories'
 
 const { Default } = composeStories(stories)
 
-describe('TrancateContainerTests', () => {
-  it('TrancateContainer should be render', () => {
+describe('TruncateContainerTests', () => {
+  it('TruncateContainer should be render', () => {
     render(<Default />)
   })
 })

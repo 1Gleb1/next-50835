@@ -36,13 +36,17 @@ export const PROJECT_LAST_BUILD_DATE = getEnv('NEXT_PUBLIC_PROJECT_LAST_BUILD_DA
 export const BACKEND_VERSION = getEnv('NEXT_PUBLIC_BACKEND_VERSION')
 
 // Режим запуска программы
-export const NODE_ENV = getEnv('NODE_ENV')
+export const NODE_ENV = getEnv('NODE_ENV') || getEnv('NEXT_PUBLIC_NODE_ENV')
 // Режим тестирования
 export const isTestEnv = NODE_ENV === 'test'
+// Локально поднятое приложение
+export const isLocalEnv = NODE_ENV === 'local'
 // Режим разработки
 export const isDevEnv = NODE_ENV === 'development'
 // Режим продакшена
 export const isProdEnv = NODE_ENV === 'production'
 
-export const SENTRY_URL = isProdEnv ? getEnv('NEXT_PUBLIC_SENTRY_URL_PROD') : getEnv('NEXT_PUBLIC_SENTRY_URL_DEV')
+export const SENTRY_DSN = isProdEnv ? getEnv('NEXT_PUBLIC_SENTRY_DSN_PROD') : getEnv('NEXT_PUBLIC_SENTRY_DSN_DEV')
+export const SENTRY_AUTH_TOKEN = isProdEnv ? getEnv('SENTRY_AUTH_TOKEN_PROD') : getEnv('SENTRY_AUTH_TOKEN_DEV')
 export const SENTRY_ENEABLED_FORCE = getEnv('NEXT_PUBLIC_SENTRY_ENEABLED_FORCE') === 'true'
+
