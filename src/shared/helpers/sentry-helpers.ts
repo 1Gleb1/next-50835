@@ -40,9 +40,9 @@ export const networkDetailAllowUrls = [
   ...networkDetailAllowUrlsPrexixes.map(urlPrefix => FAKE_BASE_URL + urlPrefix),
 ]
 
-const networkDetailDenyUrlsPrexixes = ['/health']
+const networkDetailDenyUrlsPrexixes = [] as string[]
 
 export const networkDetailDenyUrls = [
-  ...networkDetailDenyUrlsPrexixes.map(urlPrefix => BASE_URL + urlPrefix),
-  ...networkDetailDenyUrlsPrexixes.map(urlPrefix => FAKE_BASE_URL + urlPrefix),
+  ...networkDetailDenyUrlsPrexixes?.map(urlPrefix => BASE_URL + urlPrefix),
+  ...networkDetailDenyUrlsPrexixes?.map(urlPrefix => FAKE_BASE_URL + urlPrefix),
 ]

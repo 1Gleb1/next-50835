@@ -3,11 +3,9 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs'
-import JSzip from 'jszip'
 import {
   networkDetailAllowUrls,
   networkDetailDenyUrls,
-  formatBreadcrumbsToFakeDomainInProd,
 } from './src/shared/helpers'
 import { sentryBaseConfig } from './sentry.base.config'
 
@@ -70,53 +68,17 @@ Sentry.init({
   ],
 
   beforeBreadcrumb(breadcrumb) {
-    return formatBreadcrumbsToFakeDomainInProd(breadcrumb)
+    return breadcrumb
+    //если сентри лежит на том же домене, что и бекенд 
+    //без api. - то в логах отрежется домен и лог xhr превартиться в navigation
+    //чтобы обойти подменяем домен
+    // return formatBreadcrumbsToFakeDomainInProd(breadcrumb)
   },
 
-  async beforeSend(event, hint) {
-    const order = event.contexts?.put_body || event.contexts?.order
-    if (order) {
-      // @ts-expect-error
-      order?.database?.wells?.forEach(well => {
-        well.shafts?.forEach(shaft => {
-          shaft?.documents?.forEach(document => {
-            document.base64 && (document.base64 = true)
-          })
-          shaft?.mediaFiles?.forEach(mediaFile => {
-            mediaFile.base64 && (mediaFile.base64 = true)
-          })
-        })
-      })
-    }
-
+  async beforeSend(event) {
     /***
-     * Все данные в объекте context относящиеся к заявке будут заархивированы и отправленны в sentry, как attachments
+     * Тут можно обработать евент перед логированием в сентри
      ***/
-    const attachment = {}
-
-    for (const contextKey in event.contexts) {
-      if (/order/i.test(contextKey)) {
-        attachment[contextKey] = event.contexts[contextKey]
-        delete event.contexts[contextKey]
-      }
-    }
-
-    if (Object.keys(attachment).length) {
-      const zip = new JSzip()
-      zip.file('orders.zip', JSON.stringify(attachment))
-      await zip.generateAsync({ type: 'uint8array' }).then(content => {
-        hint.attachments = [...(hint.attachments || []), { filename: 'orders.zip', data: content }]
-      })
-    }
-
-    if (event.user) {
-      delete event.user?.roles
-    }
-
-    if (!hint.originalException && event.message) {
-      hint.originalException = event.message
-    }
-
     return event
   },
 })
