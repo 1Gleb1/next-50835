@@ -6,6 +6,7 @@ const withPWA = require('next-pwa')({
 })
 const { i18n } = require('./next-i18next.config')
 const packageVersion = require('./package.json').version
+const backendVersion = require('./package.json').backendVersion
 
 /** @type {import('next').NextConfig} */
 const baseConfig = {
@@ -21,6 +22,7 @@ const baseConfig = {
       publicRuntimeConfig: {
         NEXT_PUBLIC_PROJECT_VERSION: packageVersion,
         NEXT_PUBLIC_PROJECT_LAST_BUILD_DATE: Date.now(),
+        NEXT_PUBLIC_BACKEND_VERSION: backendVersion
       },
     }
   ),

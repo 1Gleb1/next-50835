@@ -3,83 +3,82 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs'
-import getConfig from 'next/config'
-import JSzip from 'jszip'
+import {
+  networkDetailAllowUrls,
+  networkDetailDenyUrls,
+} from './src/shared/helpers'
+import { sentryBaseConfig } from './sentry.base.config'
 
 Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  environment: 'production',
-  // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 1,
+  ...sentryBaseConfig,
 
-  // Setting this option to true will print useful information to the console while you're setting up Sentry.
-  debug: false,
+  //Настройка для сохранения логов сентри в оффлайн
+  transport: Sentry.makeBrowserOfflineTransport(Sentry.makeFetchTransport),
+  transportOptions: {
+    /**
+     * Name of IndexedDb database to store events
+     */
+    dbName: 'sentry-offline',
+    /**
+     * Name of IndexedDb object store to store events
+     */
+    storeName: 'queue',
+    /**
+     * Maximum number of events to store
+     */
+    maxQueueSize: 1000,
+    /**
+     * Flush the store shortly after startup.
+     */
+    flushAtStartup: false,
+    /**
+     * Called before an event is stored.
+     * Return false to drop the envelope rather than store it.
+     *
+     * @param envelope The envelope that failed to send.
+     * @param error The error that occurred.
+     * @param retryDelay The current retry delay in milliseconds.
+     */
+    // shouldStore: (envelope: Envelope, error: Error, retryDelay: number) => boolean | Promise<boolean>;
+  },
 
-  replaysOnErrorSampleRate: 1.0,
+  // Если 0 - не записывает видео с ошибками
+  // Если 1 - записывает видео только с ошибками
+  replaysOnErrorSampleRate: 0,
 
-  // This sets the sample rate to be 10%. You may want this to be 100% while
-  // in development and sample at a lower rate in production
-  replaysSessionSampleRate: 0.1,
+  // Если 0 - не записывает видео всей сессии
+  // Если 1 - записывает видео всей пользовательской сессии
+  replaysSessionSampleRate: 1,
 
   maxBreadcrumbs: 15,
-
-  normalizeDepth: 100,
-
-  initialScope: {
-    tags: {
-      version: getConfig().publicRuntimeConfig.NEXT_PUBLIC_PROJECT_VERSION,
-      last_build_time: new Date(getConfig().publicRuntimeConfig.NEXT_PUBLIC_PROJECT_LAST_BUILD_DATE).toLocaleString(),
-    },
-  },
 
   // You can remove this option if you're not planning to use the Sentry Session Replay feature:
   integrations: [
     new Sentry.Replay({
-      // Additional Replay configuration goes in here, for example:
-      maskAllText: true,
-      blockAllMedia: true,
+      //Настройка для блокировки контента текст/инпутов/медиа
+      // Разблокируем любые блокировки(из-за внутреннего контура - это безопасно)
+      maskAllText: false,
+      maskAllInputs: false,
+      blockAllMedia: false,
+
+      //Настройка отправка тела запросов
+      networkDetailAllowUrls: networkDetailAllowUrls,
+      networkDetailDenyUrls: networkDetailDenyUrls,
     }),
   ],
 
-  async beforeSend(event, hint) {
-    const order = event.contexts?.put_body || event.contexts?.order
-    if (order) {
-      order?.database?.wells?.forEach(well => {
-        well.shafts?.forEach(shaft => {
-          shaft?.documents?.forEach(document => {
-            document.base64 && (document.base64 = true)
-          })
-          shaft?.mediaFiles?.forEach(mediaFile => {
-            mediaFile.base64 && (mediaFile.base64 = true)
-          })
-        })
-      })
-    }
+  beforeBreadcrumb(breadcrumb) {
+    return breadcrumb
+    //если сентри лежит на том же домене, что и бекенд 
+    //без api. - то в логах отрежется домен и лог xhr превартиться в navigation
+    //чтобы обойти подменяем домен
+    // return formatBreadcrumbsToFakeDomainInProd(breadcrumb)
+  },
 
+  async beforeSend(event) {
     /***
-     * Все данные в объекте context относящиеся к заявке будут заархивированы и отправленны в sentry, как attachments
+     * Тут можно обработать евент перед логированием в сентри
      ***/
-    const attachment = {}
-
-    for (const contextKey in event.contexts) {
-      if (/order/i.test(contextKey)) {
-        attachment[contextKey] = event.contexts[contextKey]
-        delete event.contexts[contextKey]
-      }
-    }
-
-    if (Object.keys(attachment).length) {
-      const zip = new JSzip()
-      zip.file('orders.zip', JSON.stringify(attachment))
-      await zip.generateAsync({ type: 'uint8array' }).then(content => {
-        hint.attachments = [...(hint.attachments || []), { filename: 'orders.zip', data: content }]
-      })
-    }
-
-    if (event.user) {
-      delete event.user?.roles
-    }
-
     return event
   },
 })

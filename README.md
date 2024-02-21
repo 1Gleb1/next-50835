@@ -1,34 +1,26 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Шаблон Readme файла
+## Название проекта
+### [Redmine](https://r.webant.ru/projects) (указать ссылку)
+### [Gitlab](https://gitlab.webant.ru) (указать ссылку)
+### [Docs](https://docs.webant.ru/) (указать ссылку)
+### [Figma](https://www.figma.com/) (указать ссылку)
+### [Passbolt](https://passbolt.core2.webant.ru/) (указать ссылку, спросить у менеджера папку с проектом в пасболте, создать там в нужно среде пароль env с любым паролем и в description вставить env и вставить сюда ссылку на этот пароль)
 
-## Getting Started
+### Описание технических деталей поднятия и работы проекта
 
-First, run the development server:
+### Запуск проекта (пример)
+- Проект запускается внутри Docker.
+- Для запуска/установки пакетов используйте команду: `yarn dev`. Если node_modules не установлены, они будут автоматически установлены.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+### Обновление UI KIT (пример)
+- Необходимо запустить проект в дев режиме: `yarn dev`.
+- Открываем еще одно окно терминала (проект не останавливаем).
+- Выполняем следующую команду: `docker-compose exec frontend sh`, после чего откроется терминал внутри контейнера с проектом.
+- Далее устанавливаем нужную версию ui-kit: `yarn add @tmk/ui-kit@0.2.14`. Замените `0.2.14` на нужную версию. Если не указать версию, будет установлена самая последняя.
+- UI KIT обновлен, можно выйти из терминала контейнера: `exit`.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Версии
+При создании нового коммита необходимо поднять версию проекта(проследить, чтобы precommit сделал это сам) 
+и указать текущую версию бека.
+Версия проекта указывается в файле `package.json` в поле `version`, версия бека указывается в поле `backendVersion`.
+Актуальную версию бека можно посмотреть в swagger-документации.

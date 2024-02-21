@@ -2,13 +2,13 @@ import { useRef, useEffect, useState } from 'react'
 import { FCWithClassName, Nullable } from '@/shared/@types'
 import { Tooltip } from '../tooltip'
 import cn from 'classnames'
-export interface TrancateContainerProps {
+export interface TruncateContainerProps {
   maxWidth: number
   children: string
   childrenClassName?: string
 }
 
-export const TrancateContainer: FCWithClassName<TrancateContainerProps> = ({
+export const TruncateContainer: FCWithClassName<TruncateContainerProps> = ({
   children,
   className,
   maxWidth,
