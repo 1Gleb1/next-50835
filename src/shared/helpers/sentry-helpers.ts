@@ -7,7 +7,7 @@ import * as Sentry from '@sentry/nextjs'
 //в логах срезает его
 export const FAKE_BASE_URL = 'https://api.fake-url.ru'
 
-export function getSentryEnviroment(): string {
+export function getSentryEnvironment(): string {
   switch (NODE_ENV) {
     case 'test':
       return 'test'
@@ -23,8 +23,8 @@ export function getSentryEnviroment(): string {
 
 export function formatBreadcrumbsToFakeDomainInProd(breadcrumb: Sentry.Breadcrumb): Sentry.Breadcrumb {
   if (isProdEnv && breadcrumb.category === 'xhr' && breadcrumb?.data?.url) {
-    const splitedUrl = breadcrumb.data.url.split(BASE_URL)
-    breadcrumb.data.url = FAKE_BASE_URL + splitedUrl[1]
+    const splittedUrl = breadcrumb.data.url.split(BASE_URL)
+    breadcrumb.data.url = FAKE_BASE_URL + splittedUrl[1]
     return breadcrumb
   }
   return breadcrumb
@@ -32,17 +32,17 @@ export function formatBreadcrumbsToFakeDomainInProd(breadcrumb: Sentry.Breadcrum
 
 //нужно добавить ссылки для двух доменов, поэтому проходим два раза
 //пока не изсправится восприятие запросов в сентри
-//добавлять нужные и заблокированные префиксы в массивы networkDetailAllowUrlsPrexixes и networkDetailDenyUrlsPrexixes
-const networkDetailAllowUrlsPrexixes = ['']
+//добавлять нужные и заблокированные префиксы в массивы networkDetailAllowUrlsPrefixes и networkDetailDenyUrlsPrefixes
+const networkDetailAllowUrlsPrefixes = ['']
 
 export const networkDetailAllowUrls = [
-  ...networkDetailAllowUrlsPrexixes.map(urlPrefix => BASE_URL + urlPrefix),
-  ...networkDetailAllowUrlsPrexixes.map(urlPrefix => FAKE_BASE_URL + urlPrefix),
+  ...networkDetailAllowUrlsPrefixes.map(urlPrefix => BASE_URL + urlPrefix),
+  ...networkDetailAllowUrlsPrefixes.map(urlPrefix => FAKE_BASE_URL + urlPrefix),
 ]
 
-const networkDetailDenyUrlsPrexixes = [] as string[]
+const networkDetailDenyUrlsPrefixes = [] as string[]
 
 export const networkDetailDenyUrls = [
-  ...networkDetailDenyUrlsPrexixes?.map(urlPrefix => BASE_URL + urlPrefix),
-  ...networkDetailDenyUrlsPrexixes?.map(urlPrefix => FAKE_BASE_URL + urlPrefix),
+  ...networkDetailDenyUrlsPrefixes?.map(urlPrefix => BASE_URL + urlPrefix),
+  ...networkDetailDenyUrlsPrefixes?.map(urlPrefix => FAKE_BASE_URL + urlPrefix),
 ]
