@@ -48,5 +48,5 @@ export const isProdEnv = NODE_ENV === 'production'
 
 export const SENTRY_DSN = isProdEnv ? getEnv('NEXT_PUBLIC_SENTRY_DSN_PROD') : getEnv('NEXT_PUBLIC_SENTRY_DSN_DEV')
 export const SENTRY_AUTH_TOKEN = isProdEnv ? getEnv('SENTRY_AUTH_TOKEN_PROD') : getEnv('SENTRY_AUTH_TOKEN_DEV')
-export const SENTRY_ENEABLED_FORCE = getEnv('NEXT_PUBLIC_SENTRY_ENEABLED_FORCE') === 'true'
+export const SENTRY_ENABLED_FORCE = getEnv('NEXT_PUBLIC_SENTRY_ENABLED_FORCE') === 'true'
 

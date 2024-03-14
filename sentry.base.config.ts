@@ -2,16 +2,16 @@ import {
     isProdEnv,
     SENTRY_DSN,
     isDevEnv,
-    SENTRY_ENEABLED_FORCE,
+    SENTRY_ENABLED_FORCE,
     PROJECT_VERSION,
     PROJECT_LAST_BUILD_DATE,
   } from './src/shared/config/env'
-  import { getSentryEnviroment } from './src/shared/helpers'
+  import { getSentryEnvironment as getSentryEnvironment } from './src/shared/helpers'
   
   export const sentryBaseConfig = {
     dsn: SENTRY_DSN,
-    environment: getSentryEnviroment(),
-    enabled: isDevEnv || isProdEnv || SENTRY_ENEABLED_FORCE,
+    environment: getSentryEnvironment(),
+    enabled: isDevEnv || isProdEnv || SENTRY_ENABLED_FORCE,
   
     // Adjust this value in production, or use tracesSampler for greater control
     tracesSampleRate: 1,
