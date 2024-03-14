@@ -6,7 +6,7 @@ import {
     PROJECT_VERSION,
     PROJECT_LAST_BUILD_DATE,
   } from './src/shared/config/env'
-  import { getSentryEnvironment as getSentryEnvironment } from './src/shared/helpers'
+  import { getSentryEnvironment } from './src/shared/helpers'
   
   export const sentryBaseConfig = {
     dsn: SENTRY_DSN,
