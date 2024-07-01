@@ -1,4 +1,6 @@
 const runtimeCaching = require('next-pwa/cache')
+const { withSentryConfig } = require('@sentry/nextjs')
+
 const withPWA = require('next-pwa')({
   dest: 'public',
   runtimeCaching,
@@ -22,7 +24,7 @@ const baseConfig = {
       publicRuntimeConfig: {
         NEXT_PUBLIC_PROJECT_VERSION: packageVersion,
         NEXT_PUBLIC_PROJECT_LAST_BUILD_DATE: Date.now(),
-        NEXT_PUBLIC_BACKEND_VERSION: backendVersion
+        NEXT_PUBLIC_BACKEND_VERSION: backendVersion,
       },
     }
   ),
@@ -53,7 +55,7 @@ const baseConfig = {
 module.exports = withPWA(
   withSentryConfig(
     { ...baseConfig, baseConfig },
-    { 
+    {
       // For all available options, see
       // https://github.com/getsentry/sentry-webpack-plugin#options
       // Suppresses source map uploading logs during build

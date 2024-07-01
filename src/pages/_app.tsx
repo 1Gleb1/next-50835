@@ -4,6 +4,7 @@ import { AppPropsWithLayout } from '@/shared/@types'
 import App from '@/app'
 //Next.js требует импортировать глобальные стили только в _app.tsx
 import '@/app/index.css'
+import RootLayout from './layout'
 
 if (API_MOCKING === 'enabled') {
   require('@/app/mocks-server')
@@ -12,10 +13,12 @@ if (API_MOCKING === 'enabled') {
 const _App = (props: AppPropsWithLayout) => {
   return (
     <>
-      <Head>
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
-      </Head>
-      <App {...props} />
+      <RootLayout>
+        <Head>
+          <meta name='viewport' content='width=device-width, initial-scale=1' />
+        </Head>
+        <App {...props} />
+      </RootLayout>
     </>
   )
 }

@@ -33,4 +33,3 @@ export function useWindowDimensions() {
 
   return windowDimensions
 }
-
